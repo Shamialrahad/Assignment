@@ -1,261 +1,101 @@
+
+package Assignment;
+
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
-public class javaAplication18
-{
-	
-	static String code;
-	private static Scanner sc;
+public class LaxicalAnalysis {
 
-	
-	static String[] keyWord = {"int", "float", "double", "long", "char", "if", "else", "for", "while", "do", "include"};
-	static String[] MathOperator = {"+", "-", "*", "/", "%"};
-	static String[] LogicalOperator = {">", "<", "=", "==", ">=", "<="};		
-	static String[] Symbol = {"!", "@", "#", "&", "(", ")", "_", "{", "}", ";", ":", ",", ".", "?", "[", "]", "%d", "%f", "%lf", "%ld", "%i"};
-	static String[] headerFile = {"stdio.h", "conio.h", "string.h", "math.h", "stdlib.h"};
-	static String[] functions = {"main", "printf", "scanf"};
+    private String[] keywords = { "abstract", "boolean", "byte", "case",
+            "catch", "char", "class", "continue", "default", "do", "double",
+            "else", "extends", "final", "finally", "float", "for", "if",
+            "implements", "import", "instanceof", "int", "interface", "long",
+            "native", "new", "package", "private", "protected", "public",
+            "return", "short", "static", "super", "switch", "synchronized",
+            "this", "throw", "throws", "transient", "try", "void", "volatile",
+            "while", "false", "true", "null" };
+    HashMap<String, ArrayList<Integer>> keywordsTable;
 
-	
-	public static void main(String[] args)
-	{
-		
-		System.out.println("Write your Code here:  \n\n");
-		
-		sc = new Scanner(System.in);
-		
-		code = sc.nextLine();
-		
-		String[] splitedCode = code.split(" ");
-		String[] nameOfEachWord = new String[splitedCode.length];
-	
-		
-		int i;
-		
-		for (i = 0; i < splitedCode.length; i++)
-		{
-			nameOfEachWord[i] = checking(splitedCode[i], nameOfEachWord);
-		}
-		
-		
-		System.out.println("\n\n\n");
-		for (i = 0; i < splitedCode.length; i++)
-		{
-			nameOfEachWord[i] = checking(splitedCode[i], nameOfEachWord);
-		}
-		
-	
-		printingMethod(splitedCode, nameOfEachWord);
-		
-	}
-	
-	
-	public static String checking(String splitedCode, String[] nameOfEachWord)
-	{
-		int j;
-		
+    HashMap<String, ArrayList<Integer>> otherWords = new HashMap<String, ArrayList<Integer>>();
 
-			
-		for(j=0; j<keyWord.length; j++)
-		{
-			if(splitedCode.equals(keyWord[j]))
-			{
-				return "Keyword";
-			}
-		}
-		for(j=0; j<MathOperator.length; j++)
-		{
-			if(splitedCode.equals(MathOperator[j]))
-			{
-				return "Math Operator";
-			}
-		}
-		for(j=0; j<LogicalOperator.length; j++)
-		{
-			if(splitedCode.equals(LogicalOperator[j]))
-			{
-				return "Logical Operator";
-			}
-		}
-		for(j=0; j<Symbol.length; j++)
-		{
-			if(splitedCode.equals(Symbol[j]))
-			{
-				return "Symbol";
-			}
-		}
-		for(j=0; j<headerFile.length; j++)
-		{
-			if(splitedCode.equals(headerFile[j]))
-			{
-				return "Header File";
-			}
-		}
-		for(j=0; j<functions.length; j++)
-		{
-			if(splitedCode.equals(functions[j]))
-			{
-				return "Functions";
-			}
-		}
-		try
-		{
-			Integer.parseInt(splitedCode);
-			return "Numeric Value";
-		} 
-		catch (Exception e)
-		{
-			return "Variables";
-		}
-		
-	}
-	
-	
-	
-	public static void printingMethod(String[] splitedCode, String[] nameOfEachWord)
-	{
-		int j;	
-		boolean uff = false;
-		
-		
-		System.out.println("\n\n\n");
-		
-		
-		System.out.print("Keyword:   ");
-		for (j = 0; j < nameOfEachWord.length; j++)
-		{
-			if(nameOfEachWord[j].equals("Keyword"))
-			{
-				for (int i = 0; i < j; i++)
-					if(splitedCode[i].equals(splitedCode[j]))
-						uff = true;
+    public LaxicalAnalysis(String fileName){
 
-				if (uff == false)
-					System.out.print(" "+splitedCode[j]);
-			}
-		}
-		uff = false;
-		System.out.print("\n\n");
-		
-		
-		System.out.print("Math Operator:   ");
-		for (j = 0; j < nameOfEachWord.length; j++)
-		{
-			if(nameOfEachWord[j].equals("Math Operator"))
-			{
-				for (int i = 0; i < j; i++)
-					if(splitedCode[i].equals(splitedCode[j]))
-						uff = true;
+        Scanner kb = null;
+        int lineNumber = 0;
 
-				if (uff == false)
-					System.out.print(" "+splitedCode[j]);
-			}
-		}
-		uff = false;
-		System.out.print("\n\n");
-		
-		
-		System.out.print("Logical Operator:   ");
-		for (j = 0; j < nameOfEachWord.length; j++)
-		{
-			if(nameOfEachWord[j].equals("Logical Operator"))
-			{
-				for (int i = 0; i < j; i++)
-					if(splitedCode[i].equals(splitedCode[j]))
-						uff = true;
+        try {
+            kb = new Scanner(new File(fileName));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-				if (uff == false)
-					System.out.print(" "+splitedCode[j]);
-			}
-		}
-		uff = false;
-		System.out.print("\n\n");
-		
-		
-		System.out.print("Symbol:   ");
-		for (j = 0; j < nameOfEachWord.length; j++)
-		{
-			if(nameOfEachWord[j].equals("Symbol"))
-			{
-				for (int i = 0; i < j; i++)
-					if(splitedCode[i].equals(splitedCode[j]))
-						uff = true;
+          keywordsTable = new HashMap<String, ArrayList<Integer>>();
+          for(int i = 0; i < 47; i++){
+              keywordsTable.put(keywords[i], new ArrayList<Integer>());
+          }
 
-				if (uff == false)
-					System.out.print(" "+splitedCode[j]);
-			}
-		}
-		uff = false;
-		System.out.print("\n\n");
-		
-		
-		System.out.print("Header File:   ");
-		for (j = 0; j < nameOfEachWord.length; j++)
-		{
-			if(nameOfEachWord[j].equals("Header File"))
-			{
-				for (int i = 0; i < j; i++)
-					if(splitedCode[i].equals(splitedCode[j]))
-						uff = true;
+        while(kb.hasNextLine()){
 
-				if (uff == false)
-					System.out.print(" "+splitedCode[j]);
-			}
-		}
-		uff = false;
-		System.out.print("\n\n");
-		
-		
-		System.out.print("Numeric Value:   ");
-		for (j = 0; j < nameOfEachWord.length; j++)
-		{
-			if(nameOfEachWord[j].equals("Numeric Value"))
-			{
-				for (int i = 0; i < j; i++)
-					if(splitedCode[i].equals(splitedCode[j]))
-						uff = true;
+            lineNumber++;
 
-				if (uff == false)
-					System.out.print(" "+splitedCode[j]);
-			}
-		}
-		uff = false;
-		System.out.print("\n\n");
-		
-		
-		System.out.print("Variables:   ");
-		for (j = 0; j < nameOfEachWord.length; j++)
-		{
-			if(nameOfEachWord[j].equals("Variables"))
-			{
-				for (int i = 0; i < j; i++)
-					if(splitedCode[i].equals(splitedCode[j]))
-						uff = true;
+            String line = kb.nextLine();
 
-				if (uff == false)
-					System.out.print(" "+splitedCode[j]);
-			}
-		}
-		uff = false;
-		System.out.print("\n\n");
-		
-		
-		System.out.print("Functions:   ");
-		for (j = 0; j < nameOfEachWord.length; j++)
-		{
-			if(nameOfEachWord[j].equals("Functions"))
-			{
-				for (int i = 0; i < j; i++)
-					if(splitedCode[i].equals(splitedCode[j]))
-						uff = true;
+            String[] lineparts = line.split("\\s+|\\.+|\\;+|\\(+|\\)+|\\\"+|\\:+|\\[+|\\]+");
 
-				if (uff == false)
-					System.out.print(" "+splitedCode[j]);
-			}
-		}
-		uff = false;
-		System.out.print("\n\n");
-	
-		
-	}
-        
+            for(String x: lineparts){
+
+                ArrayList<Integer> list = keywordsTable.get(x);
+                if(list == null){
+                    list = otherWords.get(x);
+                    if(list == null){
+                        ArrayList<Integer> temp = new ArrayList<Integer>();
+                        temp.add(lineNumber);
+                        otherWords.put(x,temp);
+                    }else{
+                        otherWords.remove(x);
+                        ArrayList<Integer> temp = new ArrayList<Integer>();
+                        temp.add(lineNumber);
+                        otherWords.put(x, temp);
+                    }
+                }else{
+                    keywordsTable.remove(x);
+                    ArrayList<Integer> temp = new ArrayList<Integer>();
+                    temp.add(lineNumber);
+                    keywordsTable.put(x, temp);
+                }
+            }
+        }
+        System.out.println("Keywords:");
+        printMap(keywordsTable);
+        System.out.println();
+        System.out.println("Other Words:");
+        printMap(otherWords);
+
+    }
+    public static void printMap(Map<String, ArrayList<Integer>> mp) {    
+        Iterator<Map.Entry<String, ArrayList<Integer>>> it = mp.entrySet().iterator();    
+        while (it.hasNext()) {        
+            Map.Entry<String, ArrayList<Integer>> pairs = (Map.Entry<String, ArrayList<Integer>>)it.next();    
+            System.out.print(pairs.getKey() + " = ");
+            printList(pairs.getValue());
+            System.out.println();
+            it.remove();
+        }
+    }
+    public static void printList(List x){
+
+        for(Object m : x){
+            System.out.print(m + ", ");
+        }
+
+    }
+
+
 }
-	
